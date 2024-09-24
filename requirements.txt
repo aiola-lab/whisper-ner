@@ -1,0 +1,4 @@
+tqdm
+torch>=2.0.0
+transformers>=4.38.2
+torchaudio
