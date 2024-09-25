@@ -2,7 +2,12 @@ import logging
 import argparse
 import torch
 from transformers import WhisperProcessor, WhisperForConditionalGeneration
-from whisper_ner.utils import set_logger, get_device, audio_preprocess, prompt_preprocess
+from whisper_ner.utils import (
+    set_logger,
+    get_device,
+    audio_preprocess,
+    prompt_preprocess,
+)
 
 
 @torch.no_grad()
@@ -31,7 +36,7 @@ def main(model_path, audio_file_path, prompt, max_new_tokens, language, device):
 
     # post-process token ids to text
     transcription = processor.batch_decode(
-        predicted_ids[:, prompt_ids.shape[0]:], skip_special_tokens=True
+        predicted_ids[:, prompt_ids.shape[0] :], skip_special_tokens=True
     )[0]
     logging.info(f"Tagged Transcription: {transcription}")
 
