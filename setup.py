@@ -26,7 +26,7 @@ setup(
     long_description="",  # Optional
     long_description_content_type="text/markdown",  # Optional (see note above)
     url="",  # Optional
-    author="",  # Optional
+    author="aiOla",  # Optional
     author_email="",  # Optional
     packages=find_packages(exclude=["contrib", "docs", "tests"]),
     python_requires=">=3.10",
