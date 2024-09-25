@@ -26,6 +26,9 @@ def main(model_path, audio_file_path, prompt, max_new_tokens, language, device):
     prompt_ids = prompt_ids.to(device)
 
     # generate token ids by running model forward sequentially
+    if model_path == "aiola/whisper-ner-v1" and language != "en":
+        logging.info(f"Using language code: {language}. Please note that the model was trained on English only data.")
+
     predicted_ids = model.generate(
         input_features,
         max_new_tokens=max_new_tokens,
@@ -36,7 +39,7 @@ def main(model_path, audio_file_path, prompt, max_new_tokens, language, device):
 
     # post-process token ids to text
     transcription = processor.batch_decode(
-        predicted_ids[:, prompt_ids.shape[0] :], skip_special_tokens=True
+        predicted_ids[:, prompt_ids.shape[0]:], skip_special_tokens=True
     )[0]
     logging.info(f"Tagged Transcription: {transcription}")
 
