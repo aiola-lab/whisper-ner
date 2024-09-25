@@ -29,7 +29,6 @@ setup(
     author="",  # Optional
     author_email="",  # Optional
     packages=find_packages(exclude=["contrib", "docs", "tests"]),
-    # packages=find_packages(exclude=['contrib', 'docs', 'tests']),  # Required
     python_requires=">=3.10",
     install_requires=requirements(),  # Optional
 )
