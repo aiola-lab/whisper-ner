@@ -8,6 +8,15 @@ Implementation for the peper [_WhisperNER: Unified Open Named Entity and Speech 
 </p>
 
 
+## Links
+
+- Paper: [WhisperNER: Unified Open Named Entity and Speech Recognition](https://arxiv.org/abs/2409.08107)
+- Demo: TBD
+- Models: 
+  - [aiola/whisper-ner-v1](https://huggingface.co/aiola/whisper-ner-v1)
+- Datasets:
+  - TBD
+
 ## Installation
 Start with creating a virtual environment and activating it:
 
