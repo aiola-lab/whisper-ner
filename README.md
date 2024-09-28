@@ -78,6 +78,8 @@ print(transcription)
 
 ## Citation
 
+If you find our work or this code to be useful in your own research, please consider citing the following paper:
+
 ```bib
 @article{ayache2024whisperner,
   title={WhisperNER: Unified Open Named Entity and Speech Recognition},
