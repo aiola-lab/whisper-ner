@@ -10,12 +10,12 @@ Implementation for the peper [_WhisperNER: Unified Open Named Entity and Speech 
 
 ## Links
 
-- Paper: [WhisperNER: Unified Open Named Entity and Speech Recognition](https://arxiv.org/abs/2409.08107)
-- Demo: TBD
+- Paper: [WhisperNER: Unified Open Named Entity and Speech Recognition](https://arxiv.org/abs/2409.08107).
+- Demo: Check out the demo [here](https://huggingface.co/spaces/aiola/whisper-ner-v1).
 - Models: 
-  - [aiola/whisper-ner-v1](https://huggingface.co/aiola/whisper-ner-v1)
+  - [aiola/whisper-ner-v1](https://huggingface.co/aiola/whisper-ner-v1).
 - Datasets:
-  - TBD
+  - [Voxpopuli-NER-EN](https://huggingface.co/datasets/aiola/Voxpopuli_NER): A dataset for zero-shot NER evaluation based on the [Voxpopuli dataset](https://github.com/facebookresearch/voxpopuli).
 
 ## Installation
 Start with creating a virtual environment and activating it:
@@ -74,4 +74,15 @@ transcription = processor.batch_decode(
     predicted_ids[:, prompt_ids.shape[0]:], skip_special_tokens=True
 )[0]
 print(transcription)
+```
+
+## Citation
+
+```bib
+@article{ayache2024whisperner,
+  title={WhisperNER: Unified Open Named Entity and Speech Recognition},
+  author={Ayache, Gil and Pirchi, Menachem and Navon, Aviv and Shamsian, Aviv and Hetz, Gill and Keshet, Joseph},
+  journal={arXiv preprint arXiv:2409.08107},
+  year={2024}
+}
 ```
