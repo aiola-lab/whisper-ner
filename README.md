@@ -71,7 +71,7 @@ with torch.no_grad():
 
 # post-process token ids to text, remove prompt
 transcription = processor.batch_decode(
-    predicted_ids[:, prompt_ids.shape[0]:], skip_special_tokens=True
+    predicted_ids, skip_special_tokens=True
 )[0]
 print(transcription)
 ```
