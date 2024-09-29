@@ -15,8 +15,7 @@ Implementation for the peper [_WhisperNER: Unified Open Named Entity and Speech 
 - Models: 
   - [aiola/whisper-ner-v1](https://huggingface.co/aiola/whisper-ner-v1).
 - Datasets:
-  - [Voxpopuli-NER-EN](https://huggingface.co/datasets/aiola/Voxpopuli_NER): A dataset for zero-shot NER evaluation based on the [Voxpopuli dataset](https://github.com/facebookresearch/voxpopuli).
-
+  - [Voxpopuli-NER-EN](https://huggingface.co/datasets/aiola/Voxpopuli_NER): A dataset for zero-shot NER evaluation based on the [Voxpopuli dataset](https://github.com/facebookresearch/voxpopuli). VoxPopuli Data is released under [CC0](https://creativecommons.org/share-your-work/public-domain/cc0/) license, with European Parliament's legal disclaimer. (see European Parliament's [legal notice](https://www.europarl.europa.eu/legal-notice/en/) for the raw data)
 ## Installation
 Start with creating a virtual environment and activating it:
 
