@@ -174,26 +174,3 @@ def get_model(args_i):
         )
 
     return model
-
-
-if __name__ == '__main__':
-    from whisper_ner.dataset import WhisperNERDataset, DataCollatorSeq2SeqWithPadding
-    from transformers import WhisperProcessor, WhisperForConditionalGeneration
-    from whisper_ner.utils import remove_suppress_tokens
-
-    processor = WhisperProcessor.from_pretrained(
-        "openai/whisper-small", language="en", task="transcribe"
-    )
-    # data_path = "/home/ec2-user/workspace/nlp-artifacts/whisper_ner/pilener/pilener_train.json"
-    data_path = "/Users/avivnavon/Desktop/aiola/nlp-artifacts/whisper_ner/nuner/training_files/test.json"
-    data_collator = DataCollatorSeq2SeqWithPadding(processor=processor)
-    dataset = WhisperNERDataset(data_path=data_path, processor=processor, entity_dropout_prob=0.5)
-    dataloader = torch.utils.data.DataLoader(
-        dataset, batch_size=4, shuffle=False, collate_fn=data_collator
-    )
-
-    batch = next(iter(dataloader))
-    model = WhisperNERForConditionalGeneration.from_pretrained("openai/whisper-tiny")
-    remove_suppress_tokens(model)
-    out = model(**batch)
-    print(out.loss)

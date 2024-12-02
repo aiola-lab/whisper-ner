@@ -5,3 +5,4 @@ torchaudio
 soundfile
 jiwer
 wandb
+peft
