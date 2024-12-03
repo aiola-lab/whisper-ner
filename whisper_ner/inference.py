@@ -1,12 +1,14 @@
-import logging
 import argparse
+import logging
+
 import torch
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
+from transformers import WhisperForConditionalGeneration, WhisperProcessor
+
 from whisper_ner.utils import (
-    set_logger,
-    get_device,
     audio_preprocess,
+    get_device,
     prompt_preprocess,
+    set_logger,
 )
 
 
