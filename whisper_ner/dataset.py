@@ -35,7 +35,7 @@ class WhisperNERDataset(torch.utils.data.Dataset):
 
         if max_samples is not None:
             logging.info(f"Using only {max_samples} samples from the dataset.")
-            dataset = dataset.sample(frac=1.)[:max_samples]
+            dataset = dataset.sample(n=max_samples)
 
         self.dataset = dataset
         all_ner_tags = [
