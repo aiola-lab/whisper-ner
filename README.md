@@ -87,8 +87,6 @@ An example of a dataset can be found in [Voxpopuli-NER-EN](https://huggingface.c
 
 To train the model, run the following command (or modify it according to your needs):
 
-python trainer.py --audio-root-dir /home/ec2-user/speech_data/whisperner --batch-size=2 --entity-dropout-prob=0.1 --eval-steps=10000 --exp-name=nuner-large-250k-350k-2-negative-samples --fp16=False --gradient-accumulation-steps=2 --lora-merge-and-unload=False --lr=1e-06 --max-eval-samples=1000 --max-steps=250000 --n-neg-samples=2 --output-path=../artifacts/tmp --parts-to-freeze=encoder --predict-with-generate=False --save-steps=10000 --test-data-path /home/ec2-user/speech_data/whisperner/CrossNER_AI/ner_test_fix.json  --train-data-path /home/ec2-user/speech_data/whisperner/CrossNER_AI/ner_test_fix.json --use-lora=False --validation-data-path /home/ec2-user/speech_data/whisperner/CrossNER_AI/ner_test_fix.json --wandb-logging=false --whisper-model-name=openai/whisper-large-v2
-
 ```bash
 python whisper_ner/trainer.py \
   --whisper-model-name aiola/whisper-ner-v1 \

@@ -10,9 +10,8 @@ import torchaudio
 from transformers import WhisperProcessor
 
 
-from whisper_ner.utils import set_logger, token_padding
+from whisper_ner.utils import token_padding
 
-set_logger()
 SAMPLE_RATE = 16_000
 
 
@@ -36,12 +35,12 @@ class WhisperNERDataset(torch.utils.data.Dataset):
 
         if max_samples is not None:
             logging.info(f"Using only {max_samples} samples from the dataset.")
-            dataset = dataset[:max_samples]
+            dataset = dataset.sample(frac=1.)[:max_samples]
 
         self.dataset = dataset
         all_ner_tags = [
-            tag for d in dataset
-            for _, _, tag, _, _ in [self._unify_ner_tag(t) for t in d["ner"]]
+            example[2] for d in dataset
+            for example in [self._unify_ner_tag(t) for t in d["ner"]]
         ]
         self.all_ner_tags_unique = list(set(all_ner_tags))
 
@@ -97,7 +96,7 @@ class WhisperNERDataset(torch.utils.data.Dataset):
         query_record = self.dataset[idx]
         query_ner_tags = query_record["ner"]
         query_ner_tags = [self._unify_ner_tag(tag) for tag in query_ner_tags]
-        query_ner_types = list(set([tag for _, _, tag, _, _ in query_ner_tags]))
+        query_ner_types = list(set([example[2] for example in query_ner_tags]))
         n_pos = len(query_ner_types)
         neg_ner_types = random.choices(self.all_ner_tags_unique, k=int(n_pos * self.n_neg_samples))
         neg_ner_types = list(set(neg_ner_types))

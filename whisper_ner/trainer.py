@@ -81,7 +81,6 @@ def main(args_i, training_args):
     if args_i.use_lora and args_i.lora_merge_and_unload:
         model = model.merge_and_unload()
 
-    # todo: save tokenizer + processor to separate dir
     model_comp_path_obj = Path(args_i.output_path) / "model_components"
     model_comp_path_obj.mkdir(parents=True, exist_ok=True)
     model_comp_path_str = model_comp_path_obj.as_posix()
@@ -92,9 +91,9 @@ def main(args_i, training_args):
 
     results = trainer.evaluate(eval_dataset=dataset["test"])
 
-    message = f"loss: {results['eval_loss']}"
+    message = f"test loss: {results['eval_loss']}"
     if args_i.compute_wer:
-        message += f", WER: {results['eval_wer']}"
+        message += f", test WER: {results['eval_wer']}"
     logging.info(message)
 
 
