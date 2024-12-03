@@ -1,11 +1,11 @@
+import argparse
+import logging
 import random
 
 import numpy as np
-import logging
 import torch
 import torchaudio
 import wandb
-import argparse
 
 
 def set_seed(seed):

@@ -2,13 +2,17 @@ from dataclasses import dataclass
 from typing import Optional, Tuple, Union
 
 import torch
+from peft import LoraConfig, get_peft_model, prepare_model_for_kbit_training
 from torch import nn
 from torch.nn import CrossEntropyLoss
-from transformers.utils import logging, ModelOutput
-from transformers import WhisperModel, WhisperConfig, WhisperForConditionalGeneration
-from transformers.modeling_outputs import Seq2SeqModelOutput, BaseModelOutput
-from transformers.models.whisper.modeling_whisper import WhisperDecoder, WhisperDecoderLayer, shift_tokens_right
-from peft import LoraConfig, prepare_model_for_kbit_training, get_peft_model
+from transformers import WhisperConfig, WhisperForConditionalGeneration, WhisperModel
+from transformers.modeling_outputs import BaseModelOutput, Seq2SeqModelOutput
+from transformers.models.whisper.modeling_whisper import (
+    WhisperDecoder,
+    WhisperDecoderLayer,
+    shift_tokens_right,
+)
+from transformers.utils import ModelOutput, logging
 
 logger = logging.get_logger(__name__)
 
@@ -70,29 +74,31 @@ class WhisperNERForConditionalGeneration(WhisperForConditionalGeneration):
         self.freeze_name2func[parts_to_freeze]()
 
     def forward(
-            self,
-            input_features: Optional[torch.FloatTensor] = None,
-            attention_mask: Optional[torch.LongTensor] = None,
-            decoder_input_ids: Optional[torch.LongTensor] = None,
-            decoder_attention_mask: Optional[torch.LongTensor] = None,
-            head_mask: Optional[torch.Tensor] = None,
-            decoder_head_mask: Optional[torch.Tensor] = None,
-            cross_attn_head_mask: Optional[torch.Tensor] = None,
-            encoder_outputs: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
-            past_key_values: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
-            decoder_inputs_embeds: Optional[Tuple[torch.FloatTensor]] = None,
-            decoder_position_ids: Optional[Tuple[torch.LongTensor]] = None,
-            labels: Optional[torch.LongTensor] = None,
-            ner_labels: Optional[torch.LongTensor] = None,
-            use_cache: Optional[bool] = None,
-            output_attentions: Optional[bool] = None,
-            output_hidden_states: Optional[bool] = None,
-            return_dict: Optional[bool] = None,
-            label_smoothing: float = 0.0,
-            **kwargs
+        self,
+        input_features: Optional[torch.FloatTensor] = None,
+        attention_mask: Optional[torch.LongTensor] = None,
+        decoder_input_ids: Optional[torch.LongTensor] = None,
+        decoder_attention_mask: Optional[torch.LongTensor] = None,
+        head_mask: Optional[torch.Tensor] = None,
+        decoder_head_mask: Optional[torch.Tensor] = None,
+        cross_attn_head_mask: Optional[torch.Tensor] = None,
+        encoder_outputs: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
+        past_key_values: Optional[Tuple[Tuple[torch.FloatTensor]]] = None,
+        decoder_inputs_embeds: Optional[Tuple[torch.FloatTensor]] = None,
+        decoder_position_ids: Optional[Tuple[torch.LongTensor]] = None,
+        labels: Optional[torch.LongTensor] = None,
+        ner_labels: Optional[torch.LongTensor] = None,
+        use_cache: Optional[bool] = None,
+        output_attentions: Optional[bool] = None,
+        output_hidden_states: Optional[bool] = None,
+        return_dict: Optional[bool] = None,
+        label_smoothing: float = 0.0,
+        **kwargs,
     ) -> Union[Tuple[torch.Tensor], WhisperNEROutput]:
 
-        return_dict = return_dict if return_dict is not None else self.config.use_return_dict
+        return_dict = (
+            return_dict if return_dict is not None else self.config.use_return_dict
+        )
 
         if labels is not None:
             if decoder_input_ids is None and decoder_inputs_embeds is None:
@@ -124,14 +130,18 @@ class WhisperNERForConditionalGeneration(WhisperForConditionalGeneration):
             loss_fct = CrossEntropyLoss(label_smoothing=label_smoothing)
             # move labels to correct device to enable PP
             labels = labels.to(lm_logits.device)
-            loss = loss_fct(lm_logits.view(-1, self.config.vocab_size), labels.reshape(-1))
+            loss = loss_fct(
+                lm_logits.view(-1, self.config.vocab_size), labels.reshape(-1)
+            )
         # if ner_labels is False then ner_loss is -1
         ner_loss = torch.tensor(-1)
         if ner_labels is not None:
             ner_loss_fct = CrossEntropyLoss(label_smoothing=label_smoothing)
             # move labels to correct device to enable PP
             ner_labels = ner_labels.to(lm_logits.device)
-            ner_loss = ner_loss_fct(lm_logits.view(-1, self.config.vocab_size), ner_labels.reshape(-1))
+            ner_loss = ner_loss_fct(
+                lm_logits.view(-1, self.config.vocab_size), ner_labels.reshape(-1)
+            )
 
         if not return_dict:
             output = (lm_logits,) + outputs[1:]

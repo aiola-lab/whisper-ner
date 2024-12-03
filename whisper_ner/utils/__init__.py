@@ -1,10 +1,10 @@
 from whisper_ner.utils.utils import (
-    set_logger,
-    get_device,
     audio_preprocess,
-    prompt_preprocess,
-    token_padding,
-    remove_suppress_tokens,
-    set_seed,
+    get_device,
     parse_args,
+    prompt_preprocess,
+    remove_suppress_tokens,
+    set_logger,
+    set_seed,
+    token_padding,
 )

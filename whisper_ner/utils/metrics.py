@@ -64,5 +64,3 @@ def compute_cer(predictions, references):
         )
         total += measures["substitutions"] + measures["deletions"] + measures["hits"]
     return incorrect / total, cers
-
-

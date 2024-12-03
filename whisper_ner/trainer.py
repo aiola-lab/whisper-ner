@@ -3,12 +3,11 @@ import logging
 from functools import partial
 from pathlib import Path
 
-from transformers import Seq2SeqTrainingArguments, Seq2SeqTrainer, WhisperProcessor
+from transformers import Seq2SeqTrainer, Seq2SeqTrainingArguments, WhisperProcessor
 
 from whisper_ner.dataset import DataCollatorSeq2SeqWithPadding, get_dataset
 from whisper_ner.models import get_model
-from whisper_ner.utils import (parse_args, remove_suppress_tokens, set_logger,
-                               set_seed)
+from whisper_ner.utils import parse_args, remove_suppress_tokens, set_logger, set_seed
 from whisper_ner.utils.metrics import compute_metrics
 
 

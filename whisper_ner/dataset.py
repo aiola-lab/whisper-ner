@@ -9,7 +9,6 @@ import torch
 import torchaudio
 from transformers import WhisperProcessor
 
-
 from whisper_ner.utils import token_padding
 
 SAMPLE_RATE = 16_000
@@ -26,7 +25,7 @@ class WhisperNERDataset(torch.utils.data.Dataset):
         entity_dropout_prob=0.1,
         max_samples=None,
         n_neg_samples=2,
-        ner_mask_pct=0.,
+        ner_mask_pct=0.0,
     ):
         # read json file + create dataset
         self.data_path = data_path
@@ -39,7 +38,8 @@ class WhisperNERDataset(torch.utils.data.Dataset):
 
         self.dataset = dataset
         all_ner_tags = [
-            example[2] for d in dataset
+            example[2]
+            for d in dataset
             for example in [self._unify_ner_tag(t) for t in d["ner"]]
         ]
         self.all_ner_tags_unique = list(set(all_ner_tags))
@@ -98,7 +98,9 @@ class WhisperNERDataset(torch.utils.data.Dataset):
         query_ner_tags = [self._unify_ner_tag(tag) for tag in query_ner_tags]
         query_ner_types = list(set([example[2] for example in query_ner_tags]))
         n_pos = len(query_ner_types)
-        neg_ner_types = random.choices(self.all_ner_tags_unique, k=int(n_pos * self.n_neg_samples))
+        neg_ner_types = random.choices(
+            self.all_ner_tags_unique, k=int(n_pos * self.n_neg_samples)
+        )
         neg_ner_types = list(set(neg_ner_types))
 
         return neg_ner_types
@@ -174,7 +176,9 @@ class WhisperNERDataset(torch.utils.data.Dataset):
 
         mask_flag = random.random() <= self.ner_mask_pct
 
-        labels_text = self._construct_labels(text, ner_tags, ner_labels_to_keep, mask_flag)
+        labels_text = self._construct_labels(
+            text, ner_tags, ner_labels_to_keep, mask_flag
+        )
 
         # positive NER types
         pos_ner_types = ner_labels_to_keep
@@ -204,7 +208,9 @@ class WhisperNERDataset(torch.utils.data.Dataset):
         n_mask_tokens = len(prompt_ids)
 
         example = dict()
-        example["original_text"] = self.processor.tokenizer(text, max_length=max_len).input_ids
+        example["original_text"] = self.processor.tokenizer(
+            text, max_length=max_len
+        ).input_ids
         example["decoder_input_ids"] = decoder_input_ids
         example["labels"] = [-100] * n_mask_tokens + orig_decoder_input_ids
         example["ner_labels"] = self._extract_masked_ner_labels(example["labels"])
@@ -250,7 +256,9 @@ class DataCollatorSeq2SeqWithPadding:
         batch["labels"] = batch["labels"][:, 1:]
 
         # original text
-        batch["original_text"] = token_padding(features, self.processor, batch_key="original_text")
+        batch["original_text"] = token_padding(
+            features, self.processor, batch_key="original_text"
+        )
 
         if features[0].get("ner_labels", None) is not None:
             # ner labels
