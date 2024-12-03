@@ -25,7 +25,7 @@ def get_training_args(arguments):
         evaluation_strategy="steps",
         save_total_limit=2,
         per_device_eval_batch_size=arguments.batch_size,
-        predict_with_generate=arguments.predict_with_generate,
+        predict_with_generate=False,
         generation_max_length=225,
         save_steps=arguments.save_steps,
         eval_steps=arguments.eval_steps,
@@ -57,12 +57,6 @@ def main(args_i, training_args):
     dataset = get_dataset(args_i, processor)
     data_collator = DataCollatorSeq2SeqWithPadding(processor)
 
-    compute_metrics_arg = (
-        partial(compute_metrics, tokenizer=processor.tokenizer)
-        if args_i.compute_wer
-        else None
-    )
-
     trainer = Seq2SeqTrainer(
         model=model,
         args=training_args,
@@ -70,7 +64,6 @@ def main(args_i, training_args):
         train_dataset=dataset["train"],
         eval_dataset={"validation": dataset["validation"]},
         tokenizer=processor.feature_extractor,
-        compute_metrics=compute_metrics_arg,
     )
 
     if args_i.train:

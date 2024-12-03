@@ -179,18 +179,7 @@ def parse_args():
         default=None,
         help="maximum number of samples to evaluate",
     )
-    parser.add_argument(
-        "--predict-with-generate",
-        type="custom_bool",
-        default="False",
-        help="use generate for prediction",
-    )
-    parser.add_argument(
-        "--compute-wer",
-        type="custom_bool",
-        default="False",
-        help="compute WER or not",
-    )
+
     # training args
     parser.add_argument(
         "--train", type="custom_bool", default=True, help="whether to train or not"
