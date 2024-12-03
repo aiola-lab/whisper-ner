@@ -66,14 +66,3 @@ def compute_cer(predictions, references):
     return incorrect / total, cers
 
 
-def compute_metrics(pred, tokenizer):
-    pred_ids = pred.predictions
-    label_ids = pred.label_ids
-
-    label_ids[label_ids == -100] = tokenizer.pad_token_id
-
-    pred_str = tokenizer.batch_decode(pred_ids, skip_special_tokens=True)
-    label_str = tokenizer.batch_decode(label_ids, skip_special_tokens=True)
-
-    wer, _ = compute_wer(pred_str, label_str)
-    return dict(wer=wer)
