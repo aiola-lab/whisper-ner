@@ -33,9 +33,9 @@ class WhisperNERDataset(torch.utils.data.Dataset):
         with open(data_path, "r") as f:
             dataset = json.load(f)
 
-        if max_samples is not None:
+        if max_samples is not None and len(dataset) > max_samples:
             logging.info(f"Using only {max_samples} samples from the dataset.")
-            dataset = dataset.sample(n=max_samples)
+            dataset = random.sample(dataset, max_samples)
 
         self.dataset = dataset
         all_ner_tags = [
