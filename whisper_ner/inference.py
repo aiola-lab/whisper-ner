@@ -10,10 +10,11 @@ from whisper_ner.utils import (
     prompt_preprocess,
     set_logger,
 )
+from whisper_ner.utils.inference import EntityBiasingLogitsProcessor
 
 
 @torch.no_grad()
-def main(model_path, audio_file_path, prompt, max_new_tokens, language, device):
+def main(model_path, audio_file_path, prompt, max_new_tokens, language, device, entity_bias=0.0):
     # load model and processor from pre-trained
     processor = WhisperProcessor.from_pretrained(model_path)
     model = WhisperForConditionalGeneration.from_pretrained(model_path)
@@ -33,12 +34,17 @@ def main(model_path, audio_file_path, prompt, max_new_tokens, language, device):
             f"Using language code: {language}. Please note that the model was trained on English only data."
         )
 
+
+    # add entity biasing logits processor
+    logits_processor = EntityBiasingLogitsProcessor(bias=entity_bias)
+
     predicted_ids = model.generate(
         input_features,
         max_new_tokens=max_new_tokens,
         language=language,
         prompt_ids=prompt_ids,
         generation_config=model.generation_config,
+        logits_processor=[logits_processor],
     )
 
     # post-process token ids to text
@@ -77,6 +83,12 @@ if __name__ == "__main__":
         default="en",
         help="Language code for the transcription.",
     )
+    parser.add_argument(
+        "--entity-bias",
+        type=float,
+        default=0.0,
+        help="Bias for the start of entity token (`<`).",
+    )
 
     set_logger()
 
@@ -90,4 +102,5 @@ if __name__ == "__main__":
         args.max_new_tokens,
         args.language,
         device,
+        args.entity_bias,
     )
