@@ -83,7 +83,7 @@ The dataset should have the following json format, with keys `text`, `audio`, an
 
 An example of a dataset can be found in [Voxpopuli-NER-EN](https://huggingface.co/datasets/aiola/Voxpopuli_NER).
 
-## ## Training and finetuning
+## Training and finetuning
 
 To train the model, run the following command (or modify it according to your needs):
 
@@ -115,45 +115,14 @@ python whisper_ner/trainer.py \
 ```
 
 ## Inference
-Inference can be done using the following code:
+We provide inference code in `whisper_ner/inference.py`. Usage example:
 
-```python
-import torch
-from transformers import WhisperProcessor, WhisperForConditionalGeneration
-from whisper_ner.utils import audio_preprocess, prompt_preprocess
-
-model_path = "aiola/whisper-ner-v1"
-audio_file_path = "path/to/audio/file"
-prompt = "person, company, location"  # comma separated entity tags
-    
-# load model and processor from pre-trained
-processor = WhisperProcessor.from_pretrained(model_path)
-model = WhisperForConditionalGeneration.from_pretrained(model_path)
-
-device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-model = model.to(device)
-
-# load audio file: user is responsible for loading the audio files themselves
-input_features = audio_preprocess(audio_file_path, processor)
-input_features = input_features.to(device)
-
-prompt_ids = prompt_preprocess(prompt, processor)
-prompt_ids = prompt_ids.to(device)
-
-# generate token ids by running model forward sequentially
-with torch.no_grad():
-    predicted_ids = model.generate(
-        input_features,
-        prompt_ids=prompt_ids,
-        generation_config=model.generation_config,
-        language="en",
-    )
-
-# post-process token ids to text, remove prompt
-transcription = processor.batch_decode(
-    predicted_ids, skip_special_tokens=True
-)[0]
-print(transcription)
+```bash
+python whisper_ner/inference.py \
+  --model-path "aiola/whisper-ner-v1" \
+  --audio-file-path <audio-file-path> \
+  --prompt <prompt> \  # comma seperated entity tags, e.g. "person, company"
+  --entity-bias 0.  # bias for the start of entity token (`<`). For better control over precision-recall trade-off. Setting negative value will favor precision over recall, and positive value will favor recall over precision.
 ```
 
 ## Citation
