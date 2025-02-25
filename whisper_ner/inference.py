@@ -10,7 +10,7 @@ from whisper_ner.utils import (
     prompt_preprocess,
     set_logger,
 )
-from whisper_ner.utils.inference import EntityBiasingLogitsProcessor
+from whisper_ner.utils.entity_logits_processor import EntityBiasingLogitsProcessor
 
 
 @torch.no_grad()
